@@ -66,28 +66,46 @@ export function renderGame(container, data = {}) {
   choicesContainer.className = difficulty === 'hard' ? 'btn-group grid-2' : 'btn-group'
   container.appendChild(choicesContainer)
 
-  // --- Fact panel (shown on wrong answer) ---
+  // --- Fact panel (wrong answer modal overlay) ---
   const factPanel = document.createElement('div')
   factPanel.className = 'fact-panel hidden'
 
+  const factCard = document.createElement('div')
+  factCard.className = 'fact-panel-card'
+  factPanel.appendChild(factCard)
+
   const factFlag = document.createElement('span')
-  factPanel.appendChild(factFlag)
+  factCard.appendChild(factFlag)
 
   const factCountryName = document.createElement('p')
   factCountryName.className = 'fact-country-name'
-  factPanel.appendChild(factCountryName)
+  factCard.appendChild(factCountryName)
 
   const factCapital = document.createElement('p')
   factCapital.className = 'fact-detail'
-  factPanel.appendChild(factCapital)
+  factCard.appendChild(factCapital)
 
   const factText = document.createElement('p')
   factText.className = 'fact-text'
-  factPanel.appendChild(factText)
+  factCard.appendChild(factText)
+
+  // NEXT button lives inside the fact panel for wrong answers,
+  // and separately below choices for correct answers
+  const nextBtnInPanel = document.createElement('button')
+  nextBtnInPanel.className = 'btn-primary'
+  nextBtnInPanel.style.marginTop = '8px'
+  nextBtnInPanel.textContent = 'NEXT →'
+  nextBtnInPanel.addEventListener('click', () => {
+    factPanel.classList.add('hidden')
+    currentIndex++
+    if (currentIndex >= countries.length) endGame(false)
+    else renderQuestion()
+  })
+  factCard.appendChild(nextBtnInPanel)
 
   container.appendChild(factPanel)
 
-  // --- NEXT button ---
+  // --- NEXT button (shown below choices after a CORRECT answer) ---
   const nextBtn = document.createElement('button')
   nextBtn.className = 'btn-primary hidden'
   nextBtn.textContent = 'NEXT →'
@@ -198,7 +216,7 @@ export function renderGame(container, data = {}) {
       updateTopBar()
       audio.wrong()
 
-      // Show fact panel for the correct country
+      // Show fact panel modal for the correct country
       const correct = countries[currentIndex]
       const entry = FACTS[correct.code]
       factFlag.className = 'fact-flag-img fi fi-' + correct.code
@@ -206,9 +224,11 @@ export function renderGame(container, data = {}) {
       factCapital.textContent = entry ? '🏙️ Capital: ' + entry.capital : ''
       factText.textContent = entry ? entry.fact : ''
       factPanel.classList.remove('hidden')
+      // NEXT is inside the panel for wrong answers — don't show the bottom one
+      return
     }
 
-    // Show NEXT button
+    // Correct answer — show the bottom NEXT button
     nextBtn.classList.remove('hidden')
   }
 
