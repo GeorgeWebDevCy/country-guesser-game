@@ -48,12 +48,17 @@ ipcMain.handle('scores:save', (_, { continent, difficulty, entry }) => {
 function createWindow() {
   const win = new BrowserWindow({
     width: 800, height: 700, minWidth: 600, minHeight: 600,
+    show: false, // shown after maximize to avoid a flash of non-maximized content
     title: 'Flag Guesser',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
     },
+  })
+  win.once('ready-to-show', () => {
+    win.maximize()
+    win.show()
   })
   if (isDev) {
     win.loadURL('http://localhost:5173')

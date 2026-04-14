@@ -4,6 +4,7 @@
   "description": "Flag guessing game for Windows",
   "main": "main.js",
   "scripts": {
+    "predev": "npm install --prefer-offline",
     "dev": "concurrently \"vite\" \"wait-on tcp:5173 && electron .\"",
     "build": "vite build",
     "test": "vitest run",
