@@ -3,15 +3,23 @@ const path = require('path')
 const fs = require('fs')
 
 const isDev = !app.isPackaged
-const SCORES_FILE = path.join(app.getPath('userData'), 'scores.json')
+
+function getScoresFile() {
+  return path.join(app.getPath('userData'), 'scores.json')
+}
 
 function loadScoresFile() {
-  try { return JSON.parse(fs.readFileSync(SCORES_FILE, 'utf8')) }
+  try { return JSON.parse(fs.readFileSync(getScoresFile(), 'utf8')) }
   catch { return {} }
 }
 
 function saveScoresFile(data) {
-  fs.writeFileSync(SCORES_FILE, JSON.stringify(data, null, 2))
+  try {
+    fs.writeFileSync(getScoresFile(), JSON.stringify(data, null, 2))
+  } catch (err) {
+    console.error('Failed to save scores:', err)
+    throw err
+  }
 }
 
 function updateTopScores(current, newEntry) {

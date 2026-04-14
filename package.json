@@ -4,7 +4,7 @@
   "description": "Flag guessing game for Windows",
   "main": "main.js",
   "scripts": {
-    "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "dev": "concurrently \"vite\" \"wait-on tcp:5173 && electron .\"",
     "build": "vite build",
     "test": "vitest run",
     "test:watch": "vitest",
