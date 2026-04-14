@@ -45,9 +45,10 @@ export function renderSetup(container, data = {}) {
   })
 
   const diffHint = document.createElement('p')
-  diffHint.className = 'subtitle mt-8'
-  diffHint.style.fontSize = '0.82rem'
-  diffHint.textContent = 'Easy = 2 choices  ·  Medium = 5  ·  Hard = 10'
+  diffHint.className = 'subtitle mt-8 text-sm'
+  diffHint.textContent = Object.entries(DIFFICULTY_INFO)
+    .map(([level, label]) => `${level.charAt(0).toUpperCase() + level.slice(1)} = ${label}`)
+    .join('  ·  ')
   diffCard.appendChild(diffHint)
   container.appendChild(diffCard)
 
@@ -150,7 +151,17 @@ export function renderSetup(container, data = {}) {
     overlayContent.textContent = 'Loading…'
     overlay.classList.remove('hidden')
 
-    const scores = await loadScores(selectedContinent, selectedDifficulty)
+    let scores
+    try {
+      scores = await loadScores(selectedContinent, selectedDifficulty)
+    } catch {
+      overlayContent.textContent = ''
+      const errP = document.createElement('p')
+      errP.className = 'no-scores'
+      errP.textContent = 'Could not load scores. Try again!'
+      overlayContent.appendChild(errP)
+      return
+    }
 
     overlayContent.textContent = ''
     if (!scores.length) {
