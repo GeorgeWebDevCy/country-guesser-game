@@ -96,7 +96,7 @@ h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 12px; }
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 520px;
+  max-width: clamp(520px, 52vw, 760px);
   margin-bottom: 14px;
   font-size: 0.9rem;
   font-weight: 600;
@@ -115,7 +115,7 @@ h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 12px; }
 /* Flag area */
 .flag-area {
   width: 100%;
-  max-width: 520px;
+  max-width: clamp(520px, 52vw, 760px);
   background: rgba(255,255,255,0.12);
   border: 2px solid rgba(255,255,255,0.25);
   border-radius: 16px;
@@ -124,18 +124,17 @@ h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 12px; }
   margin-bottom: 14px;
 }
 .flag-img {
-  width: 300px;
-  height: 200px;
-  object-fit: contain;
-  border-radius: 6px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  width: clamp(340px, 44vw, 660px);
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  box-shadow: 0 6px 28px rgba(0,0,0,0.35);
   display: block;
-  margin: 0 auto 12px;
+  margin: 0 auto 14px;
 }
 .flag-label { font-size: 0.82rem; letter-spacing: 2px; opacity: 0.7; text-transform: uppercase; }
 
 /* Choice buttons */
-.choices { display: flex; flex-direction: column; gap: 9px; width: 100%; max-width: 520px; margin-bottom: 12px; }
+.choices { display: flex; flex-direction: column; gap: 9px; width: 100%; max-width: clamp(520px, 52vw, 760px); margin-bottom: 12px; }
 .choices.grid-2 { display: grid; grid-template-columns: 1fr 1fr; }
 
 .choice-btn {
