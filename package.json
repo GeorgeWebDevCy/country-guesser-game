@@ -1,0 +1,37 @@
+{
+  "name": "flag-guesser",
+  "version": "1.0.0",
+  "description": "Flag guessing game for Windows",
+  "main": "main.js",
+  "scripts": {
+    "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "build": "vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "make": "npm run build && electron-builder"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "electron": "^30.0.0",
+    "electron-builder": "^24.13.3",
+    "vite": "^5.2.0",
+    "vite-plugin-static-copy": "^1.0.6",
+    "vitest": "^1.5.0",
+    "wait-on": "^7.2.0"
+  },
+  "dependencies": {
+    "flag-icons": "^7.2.3"
+  },
+  "build": {
+    "appId": "com.flagguesser.app",
+    "productName": "Flag Guesser",
+    "win": {
+      "target": "nsis"
+    },
+    "files": [
+      "dist/**/*",
+      "main.js",
+      "preload.js"
+    ]
+  }
+}
