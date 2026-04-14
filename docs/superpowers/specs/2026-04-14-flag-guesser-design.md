@@ -171,9 +171,30 @@ Rating thresholds *(documented here — easy to adjust if nephew wants different
 
 ---
 
-## Out of Scope
+## Extra Features
 
-- Sound effects (can be added later)
-- Persistent high scores / leaderboard (can be added later)
-- Multiplayer
-- Mobile / macOS builds
+### Sound Effects
+
+Bundled audio files played via the HTML5 `<audio>` API:
+
+- **Correct answer** — short positive chime
+- **Wrong answer** — short buzzer
+- **Game complete** (all flags done in time) — fanfare
+- **Time ran out** — failure sting
+- **Timer warning** — ticking sound when ≤ 30 seconds remain
+
+All sound files shipped with the app — no internet required.
+
+### Persistent High Scores
+
+Scores saved locally to a JSON file in Electron's `userData` folder (survives app updates).
+
+Each score entry:
+
+```js
+{ continent, difficulty, mistakes, totalFlags, timeRemaining, date }
+```
+
+- Top 10 scores stored **per continent + difficulty combination**
+- A **High Scores button** on the Setup screen opens a simple overlay listing the top 10 for the currently selected combination
+- After a game, if the player's score makes the top 10 it is saved automatically (no name entry needed for a 9-year-old)
