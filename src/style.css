@@ -141,16 +141,15 @@ h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 14px; }
 
 #app.results-screen h2 {
   font-size: 1.4rem;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   align-self: flex-start;
-  max-width: min(700px, 90vw);
+  max-width: min(900px, 90vw);
   width: 100%;
   text-align: left;
 }
 
 #app.results-screen .mistakes-list {
-  max-width: min(700px, 90vw);
-  max-height: 40vh;
+  max-width: min(900px, 90vw);
 }
 
 #app.results-screen .btn-group {
@@ -316,35 +315,37 @@ h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 14px; }
 .rating-word.good      { color: #2ecc71; text-shadow: 0 0 18px rgba(46,204,113,0.4); }
 .rating-word.bad       { color: #ff6b6b; }
 
-/* ── Mistakes list ──────────────────────────────────────────────────── */
+/* ── Mistakes grid ──────────────────────────────────────────────────── */
 .mistakes-list {
   width: 100%;
-  max-width: 560px;
-  max-height: 260px;
-  overflow-y: auto;
-  background: rgba(0,0,0,0.22);
-  border-radius: 14px;
-  padding: 12px;
-  margin-bottom: 16px;
+  max-width: min(900px, 90vw);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 12px;
+  padding: 0;
+  margin-bottom: 20px;
   list-style: none;
 }
 .mistake-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
-  padding: 9px 6px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  font-size: 1rem;
-  font-weight: 600;
+  gap: 8px;
+  padding: 12px 8px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.2;
 }
-.mistake-item:last-child { border-bottom: none; }
-/* Mistake flags (small, in results list) */
+/* Flag inside each mistake card */
 .mistake-item .fi {
-  width: 48px !important;
+  width: 80px !important;
   aspect-ratio: 4 / 3;
-  border-radius: 4px;
-  flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  border-radius: 6px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.35);
 }
 
 /* ── Overlay (high scores) ──────────────────────────────────────────── */
