@@ -81,14 +81,13 @@ export function renderGame(container, data = {}) {
   const intervalId = setInterval(() => {
     if (gameOver) return
     timeRemaining--
-    updateTimerDisplay()
     if (timeRemaining <= 0) {
-      // Count unanswered current flag as a mistake
-      if (!answered) {
-        mistakes.push(countries[currentIndex])
-      }
+      updateTimerDisplay() // show 0:00 without tick
+      if (!answered) mistakes.push(countries[currentIndex])
       endGame(true)
+      return
     }
+    updateTimerDisplay()
   }, 1000)
 
   // --- Helpers ---
@@ -99,9 +98,12 @@ export function renderGame(container, data = {}) {
 
   function updateTimerDisplay() {
     timerBadge.textContent = `⏱ ${formatTime(timeRemaining)}`
-    if (timeRemaining <= WARNING_THRESHOLD) {
+    if (timeRemaining > 0 && timeRemaining <= WARNING_THRESHOLD) {
       timerBadge.classList.add('warning')
       audio.tick()
+    } else if (timeRemaining <= 0) {
+      timerBadge.classList.add('warning')
+      // no tick at zero — endGame plays timeout sound instead
     } else {
       timerBadge.classList.remove('warning')
     }
@@ -168,7 +170,7 @@ export function renderGame(container, data = {}) {
         }
       })
       mistakes.push(countries[currentIndex])
-      mistakeCount.textContent = `❌ ${mistakes.length} mistake(s)`
+      updateTopBar()
       audio.wrong()
     }
 
@@ -189,12 +191,16 @@ export function renderGame(container, data = {}) {
 
     const rating = getRating(mistakes.length, countries.length)
 
-    await saveScore(continent, difficulty, {
-      mistakes: mistakes.length,
-      totalFlags: countries.length,
-      timeRemaining,
-      date: new Date().toISOString(),
-    })
+    try {
+      await saveScore(continent, difficulty, {
+        mistakes: mistakes.length,
+        totalFlags: countries.length,
+        timeRemaining,
+        date: new Date().toISOString(),
+      })
+    } catch (e) {
+      console.error('Failed to save score:', e)
+    }
 
     showScreen('results', {
       difficulty,
