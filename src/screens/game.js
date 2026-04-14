@@ -17,6 +17,8 @@ const WARNING_THRESHOLD = 30
 export function renderGame(container, data = {}) {
   const { difficulty = 'medium', continent = 'All' } = data
 
+  container.classList.add('game-screen')
+
   // --- State ---
   const countries = shuffleArray(getCountriesByContinent(COUNTRIES, continent))
   let currentIndex = 0

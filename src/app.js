@@ -6,6 +6,7 @@ import { renderResults } from './screens/results.js'
 const app = document.getElementById('app')
 
 export function showScreen(name, data = {}) {
+  app.className = ''   // reset screen-specific layout classes
   app.textContent = '' // clear without markup injection
   if (name === 'setup') renderSetup(app, data)
   else if (name === 'game') renderGame(app, data)
