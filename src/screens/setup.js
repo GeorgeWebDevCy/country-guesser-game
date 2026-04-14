@@ -10,6 +10,7 @@ const DIFFICULTY_INFO = {
 }
 
 export function renderSetup(container, data = {}) {
+  container.classList.add('setup-screen')
   let selectedDifficulty = data.difficulty ?? null
   let selectedContinent = data.continent ?? null
 

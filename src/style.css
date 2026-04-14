@@ -15,7 +15,8 @@ html, body {
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  padding: 28px 20px 32px;
+  width: 100%;
+  padding: 0;
 }
 
 /* ── Typography ─────────────────────────────────────────────────────── */
@@ -100,6 +101,70 @@ h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 14px; }
   transition: background 0.15s;
 }
 .btn-secondary:hover { background: rgba(255,255,255,0.28); }
+
+/* ── SETUP SCREEN ───────────────────────────────────────────────────── */
+#app.setup-screen {
+  justify-content: center;
+  padding: 32px 40px;
+  gap: 0;
+}
+
+#app.setup-screen h1 {
+  font-size: 3.5rem;
+  margin-bottom: 6px;
+}
+
+#app.setup-screen .card {
+  max-width: min(700px, 90vw);
+}
+
+#app.setup-screen .btn-primary,
+#app.setup-screen .btn-secondary {
+  max-width: min(700px, 90vw);
+}
+
+/* ── RESULTS SCREEN ─────────────────────────────────────────────────── */
+#app.results-screen {
+  justify-content: center;
+  padding: 40px;
+  gap: 0;
+}
+
+#app.results-screen .rating-word {
+  font-size: 4rem;
+}
+
+#app.results-screen .subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 28px;
+}
+
+#app.results-screen h2 {
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+  align-self: flex-start;
+  max-width: min(700px, 90vw);
+  width: 100%;
+  text-align: left;
+}
+
+#app.results-screen .mistakes-list {
+  max-width: min(700px, 90vw);
+  max-height: 40vh;
+}
+
+#app.results-screen .btn-group {
+  max-width: min(700px, 90vw);
+  width: 100%;
+  gap: 16px;
+}
+
+#app.results-screen .btn-group .btn-secondary,
+#app.results-screen .btn-group .btn-primary {
+  padding: 18px;
+  font-size: 1.15rem;
+  max-width: none;
+}
 
 /* ── GAME SCREEN — full-viewport layout ─────────────────────────────── */
 #app.game-screen {

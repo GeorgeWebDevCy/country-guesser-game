@@ -2,6 +2,7 @@ import { showScreen } from '../app.js'
 import { formatTime } from '../utils.js'
 
 export function renderResults(container, data = {}) {
+  container.classList.add('results-screen')
   const {
     difficulty,
     continent,
