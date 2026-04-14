@@ -14,13 +14,14 @@ export function renderResults(container, data = {}) {
 
   // 1. Rating
   const ratingEl = document.createElement('p')
-  ratingEl.className = `rating-word ${rating}`
+  const safeRating = ['excellent', 'good', 'bad'].includes(rating) ? rating : 'bad'
+  ratingEl.className = `rating-word ${safeRating}`
   const ratingText = {
     excellent: '🏆 Excellent!',
     good: '👍 Good!',
     bad: '😬 Bad luck!',
   }
-  ratingEl.textContent = ratingText[rating] ?? ratingText.bad
+  ratingEl.textContent = ratingText[safeRating]
   container.appendChild(ratingEl)
 
   // 2. Score summary
@@ -41,7 +42,7 @@ export function renderResults(container, data = {}) {
     noMistakes.textContent = '🎉 No mistakes!'
     container.appendChild(noMistakes)
   } else {
-    const heading = document.createElement('p')
+    const heading = document.createElement('h2')
     heading.textContent = 'Flags to practise:'
     container.appendChild(heading)
 
@@ -53,7 +54,7 @@ export function renderResults(container, data = {}) {
       item.className = 'mistake-item'
 
       const flag = document.createElement('span')
-      flag.className = `fi fi-${country.code}`
+      flag.className = `fi fi-${country.code ?? ''}`
 
       const name = document.createElement('span')
       name.textContent = country.name
@@ -71,11 +72,13 @@ export function renderResults(container, data = {}) {
   btnGroup.className = 'btn-group'
 
   const backBtn = document.createElement('button')
+  backBtn.type = 'button'
   backBtn.className = 'btn-secondary'
   backBtn.textContent = '← Back'
   backBtn.addEventListener('click', () => showScreen('setup'))
 
   const retryBtn = document.createElement('button')
+  retryBtn.type = 'button'
   retryBtn.className = 'btn-primary'
   retryBtn.textContent = 'Try Again 🔄'
   retryBtn.addEventListener('click', () => showScreen('game', { difficulty, continent }))
