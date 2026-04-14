@@ -1,5 +1,213 @@
-export function renderGame(container) {
-  const h = document.createElement('h1')
-  h.textContent = 'Game stub'
-  container.appendChild(h)
+import { COUNTRIES } from '../data/countries.js'
+import {
+  shuffleArray,
+  getCountriesByContinent,
+  generateChoices,
+  getRating,
+  formatTime,
+} from '../utils.js'
+import { audio } from '../audio.js'
+import { saveScore } from '../scores.js'
+import { showScreen } from '../app.js'
+
+const CHOICE_COUNT = { easy: 2, medium: 5, hard: 10 }
+const TIMER_START = 300 // 5 minutes in seconds
+const WARNING_THRESHOLD = 30
+
+export function renderGame(container, data = {}) {
+  const { difficulty = 'medium', continent = 'All' } = data
+
+  // --- State ---
+  const countries = shuffleArray(getCountriesByContinent(COUNTRIES, continent))
+  let currentIndex = 0
+  let mistakes = []
+  let timeRemaining = TIMER_START
+  let gameOver = false
+  let answered = false
+
+  // --- Top bar ---
+  const topBar = document.createElement('div')
+  topBar.className = 'top-bar'
+
+  const questionCounter = document.createElement('span')
+  questionCounter.className = 'question-counter'
+
+  const timerBadge = document.createElement('span')
+  timerBadge.className = 'timer-badge'
+
+  const mistakeCount = document.createElement('span')
+  mistakeCount.className = 'mistake-count'
+
+  topBar.appendChild(questionCounter)
+  topBar.appendChild(timerBadge)
+  topBar.appendChild(mistakeCount)
+  container.appendChild(topBar)
+
+  // --- Flag area ---
+  const flagArea = document.createElement('div')
+  flagArea.className = 'flag-area'
+
+  const flagImg = document.createElement('span')
+  flagImg.className = 'flag-img'
+
+  const flagLabel = document.createElement('p')
+  flagLabel.className = 'flag-label'
+  flagLabel.textContent = 'WHICH COUNTRY IS THIS?'
+
+  flagArea.appendChild(flagImg)
+  flagArea.appendChild(flagLabel)
+  container.appendChild(flagArea)
+
+  // --- Choices container ---
+  const choicesContainer = document.createElement('div')
+  choicesContainer.className = difficulty === 'hard' ? 'btn-group grid-2' : 'btn-group'
+  container.appendChild(choicesContainer)
+
+  // --- NEXT button ---
+  const nextBtn = document.createElement('button')
+  nextBtn.className = 'btn-primary hidden'
+  nextBtn.textContent = 'NEXT'
+  nextBtn.addEventListener('click', () => {
+    currentIndex++
+    if (currentIndex >= countries.length) {
+      endGame(false)
+    } else {
+      renderQuestion()
+    }
+  })
+  container.appendChild(nextBtn)
+
+  // --- Timer ---
+  const intervalId = setInterval(() => {
+    if (gameOver) return
+    timeRemaining--
+    updateTimerDisplay()
+    if (timeRemaining <= 0) {
+      // Count unanswered current flag as a mistake
+      if (!answered) {
+        mistakes.push(countries[currentIndex])
+      }
+      endGame(true)
+    }
+  }, 1000)
+
+  // --- Helpers ---
+  function updateTopBar() {
+    questionCounter.textContent = `Question ${currentIndex + 1} / ${countries.length}`
+    mistakeCount.textContent = `❌ ${mistakes.length} mistake(s)`
+  }
+
+  function updateTimerDisplay() {
+    timerBadge.textContent = `⏱ ${formatTime(timeRemaining)}`
+    if (timeRemaining <= WARNING_THRESHOLD) {
+      timerBadge.classList.add('warning')
+      audio.tick()
+    } else {
+      timerBadge.classList.remove('warning')
+    }
+  }
+
+  function renderQuestion() {
+    answered = false
+    const country = countries[currentIndex]
+    const choiceCount = CHOICE_COUNT[difficulty] ?? 5
+
+    // Update top bar
+    updateTopBar()
+
+    // Update flag
+    flagImg.className = 'flag-img fi fi-' + country.code
+
+    // Generate choices
+    const choices = generateChoices(country, countries, choiceCount)
+
+    // Clear previous choices
+    choicesContainer.textContent = ''
+
+    choices.forEach(choice => {
+      const btn = document.createElement('button')
+      btn.className = 'choice-btn'
+      btn.textContent = choice.name
+      btn.addEventListener('click', () => handleAnswer(choice, choices))
+      choicesContainer.appendChild(btn)
+    })
+
+    // Hide NEXT button
+    nextBtn.classList.add('hidden')
+  }
+
+  function handleAnswer(chosen, choices) {
+    if (answered) return
+    answered = true
+
+    const allBtns = choicesContainer.querySelectorAll('.choice-btn')
+
+    // Disable all buttons
+    allBtns.forEach(btn => {
+      btn.disabled = true
+    })
+
+    if (chosen.isCorrect) {
+      // Mark clicked button correct
+      allBtns.forEach(btn => {
+        if (btn.textContent === chosen.name) {
+          btn.classList.add('correct')
+        }
+      })
+      audio.correct()
+    } else {
+      // Mark clicked button wrong, reveal correct
+      allBtns.forEach(btn => {
+        if (btn.textContent === chosen.name) {
+          btn.classList.add('wrong')
+        }
+        // Find the correct one among choices to highlight it
+        const matchingChoice = choices.find(c => c.name === btn.textContent)
+        if (matchingChoice && matchingChoice.isCorrect) {
+          btn.classList.add('correct')
+        }
+      })
+      mistakes.push(countries[currentIndex])
+      mistakeCount.textContent = `❌ ${mistakes.length} mistake(s)`
+      audio.wrong()
+    }
+
+    // Show NEXT button
+    nextBtn.classList.remove('hidden')
+  }
+
+  async function endGame(timedOut) {
+    if (gameOver) return
+    gameOver = true
+    clearInterval(intervalId)
+
+    if (timedOut) {
+      audio.timeout()
+    } else {
+      audio.complete()
+    }
+
+    const rating = getRating(mistakes.length, countries.length)
+
+    await saveScore(continent, difficulty, {
+      mistakes: mistakes.length,
+      totalFlags: countries.length,
+      timeRemaining,
+      date: new Date().toISOString(),
+    })
+
+    showScreen('results', {
+      difficulty,
+      continent,
+      mistakes,
+      countries,
+      timeRemaining,
+      timedOut,
+      rating,
+    })
+  }
+
+  // --- Initial render ---
+  updateTimerDisplay()
+  renderQuestion()
 }
