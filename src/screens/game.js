@@ -1,4 +1,5 @@
 import { COUNTRIES } from '../data/countries.js'
+import { FACTS } from '../data/facts.js'
 import {
   shuffleArray,
   getCountriesByContinent,
@@ -65,10 +66,31 @@ export function renderGame(container, data = {}) {
   choicesContainer.className = difficulty === 'hard' ? 'btn-group grid-2' : 'btn-group'
   container.appendChild(choicesContainer)
 
+  // --- Fact panel (shown on wrong answer) ---
+  const factPanel = document.createElement('div')
+  factPanel.className = 'fact-panel hidden'
+
+  const factFlag = document.createElement('span')
+  factPanel.appendChild(factFlag)
+
+  const factCountryName = document.createElement('p')
+  factCountryName.className = 'fact-country-name'
+  factPanel.appendChild(factCountryName)
+
+  const factCapital = document.createElement('p')
+  factCapital.className = 'fact-detail'
+  factPanel.appendChild(factCapital)
+
+  const factText = document.createElement('p')
+  factText.className = 'fact-text'
+  factPanel.appendChild(factText)
+
+  container.appendChild(factPanel)
+
   // --- NEXT button ---
   const nextBtn = document.createElement('button')
   nextBtn.className = 'btn-primary hidden'
-  nextBtn.textContent = 'NEXT'
+  nextBtn.textContent = 'NEXT →'
   nextBtn.addEventListener('click', () => {
     currentIndex++
     if (currentIndex >= countries.length) {
@@ -113,6 +135,7 @@ export function renderGame(container, data = {}) {
 
   function renderQuestion() {
     answered = false
+    factPanel.classList.add('hidden')
     const country = countries[currentIndex]
     const choiceCount = CHOICE_COUNT[difficulty] ?? 5
 
@@ -174,6 +197,15 @@ export function renderGame(container, data = {}) {
       mistakes.push(countries[currentIndex])
       updateTopBar()
       audio.wrong()
+
+      // Show fact panel for the correct country
+      const correct = countries[currentIndex]
+      const entry = FACTS[correct.code]
+      factFlag.className = 'fact-flag-img fi fi-' + correct.code
+      factCountryName.textContent = '🌍 ' + correct.name
+      factCapital.textContent = entry ? '🏙️ Capital: ' + entry.capital : ''
+      factText.textContent = entry ? entry.fact : ''
+      factPanel.classList.remove('hidden')
     }
 
     // Show NEXT button

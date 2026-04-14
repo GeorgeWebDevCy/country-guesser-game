@@ -302,6 +302,58 @@ h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 14px; }
   align-self: center;
 }
 
+/* ── Fact panel (wrong answer reveal) ──────────────────────────────── */
+.fact-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: clamp(480px, 44vw, 720px);
+  background: rgba(0,0,0,0.35);
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 16px;
+  padding: 18px 24px;
+  margin: 0 20px 10px;
+  align-self: center;
+  animation: fadeSlideIn 0.25s ease;
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fact-flag-img {
+  width: clamp(180px, 22vw, 300px) !important;
+  aspect-ratio: 4 / 3;
+  display: block !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  margin-bottom: 4px;
+}
+
+.fact-country-name {
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.fact-detail {
+  font-size: 0.95rem;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+.fact-text {
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  color: #ffd700;
+  line-height: 1.4;
+  max-width: 500px;
+}
+
 /* ── Rating (results screen) ────────────────────────────────────────── */
 .rating-word {
   font-size: 2.8rem;
