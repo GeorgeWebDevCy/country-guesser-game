@@ -1,6 +1,6 @@
 {
   "name": "flag-guesser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Flag guessing game for Windows",
   "main": "main.js",
   "scripts": {

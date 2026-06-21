@@ -8,6 +8,7 @@ export function renderResults(container, data = {}) {
     continent,
     mistakes = [],
     countries = [],
+    elapsedTime = 0,
     timeRemaining = 0,
     timedOut = false,
     rating = 'bad',
@@ -30,10 +31,11 @@ export function renderResults(container, data = {}) {
   summary.className = 'subtitle'
   const mistakeCount = mistakes.length
   const totalCount = countries.length
+  const elapsedText = `${formatTime(elapsedTime)} elapsed`
   if (timedOut) {
-    summary.textContent = `${mistakeCount} mistakes out of ${totalCount} flags — Time ran out!`
+    summary.textContent = `${mistakeCount} mistakes out of ${totalCount} flags · ${elapsedText} · Time ran out!`
   } else {
-    summary.textContent = `${mistakeCount} mistakes out of ${totalCount} flags · ${formatTime(timeRemaining)} remaining`
+    summary.textContent = `${mistakeCount} mistakes out of ${totalCount} flags · ${elapsedText} · ${formatTime(timeRemaining)} remaining`
   }
   container.appendChild(summary)
 

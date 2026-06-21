@@ -261,6 +261,7 @@ export function renderGame(container, data = {}) {
       continent,
       mistakes,
       countries,
+      elapsedTime: TIMER_START - timeRemaining,
       timeRemaining,
       timedOut,
       rating,
