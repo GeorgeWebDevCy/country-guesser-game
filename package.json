@@ -26,12 +26,15 @@
   "build": {
     "appId": "com.flagguesser.app",
     "productName": "Flag Guesser",
+    "directories": {
+      "buildResources": "build"
+    },
     "win": {
       "target": "nsis",
-      "icon": "build/icon.ico"
+      "icon": "icon.ico"
     },
     "files": [
-      "dist/**/*",
+      "dist/renderer/**/*",
       "main.js",
       "preload.js"
     ]
